@@ -1,44 +1,37 @@
 const mysql = require('mysql2/promise');
+const logger = require('../utils/logger');
 
-// 数据库连接配置
-const config = {
-  host: 'localhost',
-  port: 3306,
-  user: 'root',
-  password: 'root',
-  database: 'city_life_platform',
+const DB_CONFIG = {
+  host: process.env.DB_HOST || '127.0.0.1',
+  port: Number(process.env.DB_PORT || 3306),
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'root',
+  database: process.env.DB_NAME || 'city_life_platform',
+  charset: 'utf8mb4',
   waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+  connectionLimit: Number(process.env.DB_POOL_LIMIT || 10),
+  queueLimit: 0,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 10000
 };
 
-// 创建数据库连接池
-const pool = mysql.createPool(config);
+let pool = mysql.createPool(DB_CONFIG);
 
-// 测试数据库连接
 async function testConnection() {
   try {
-    const connection = await pool.getConnection();
-    console.log('数据库连接成功');
-    connection.release();
+    const conn = await pool.getConnection();
+    await conn.ping();
+    conn.release();
+    logger.info('数据库连接成功');
   } catch (error) {
-    console.error('数据库连接失败:', error.message);
+    logger.error(`数据库连接失败: ${error.message}`);
+    pool = mysql.createPool(DB_CONFIG);
   }
 }
 
-// 执行SQL查询
 async function query(sql, params = []) {
-  try {
-    const [results] = await pool.execute(sql, params);
-    return results;
-  } catch (error) {
-    console.error('SQL执行错误:', error.message);
-    throw error;
-  }
+  const [rows] = await pool.execute(sql, params);
+  return rows;
 }
 
-module.exports = {
-  pool,
-  testConnection,
-  query
-};
+module.exports = { query, pool, testConnection, DB_CONFIG };
