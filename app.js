@@ -45,7 +45,10 @@ app.use((req, res, next) => {
 
 app.get('/api/test', (req, res) => res.json({ code: 200, msg: '服务正常', data: null }));
 app.post('/api/upload/avatar', upload.single('file'), (req, res) => {
-  res.json({ code: 200, msg: '上传成功', data: { path: req.file.path } });
+  if (!req.file) {
+    return res.json({ code: 400, msg: '请上传文件', data: null });
+  }
+  return res.json({ code: 200, msg: '上传成功', data: { path: req.file.path } });
 });
 
 app.use('/api/user', userRoutes);
@@ -56,6 +59,8 @@ app.use('/api/business', businessRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/collection', collectionRoutes);
 app.use('/api/common', commonRoutes);
+
+app.use((req, res) => fail(res, 404, '接口不存在'));
 
 app.use((err, req, res, next) => {
   logger.error(err.stack || err.message);
