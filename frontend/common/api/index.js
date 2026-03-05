@@ -1,6 +1,6 @@
 import { request } from '../utils/request';
 
-export const api = {
+const api = {
   homeSearch: (keyword) => request({ url: `/common/search?keyword=${encodeURIComponent(keyword)}` }),
   nearby: (city) => request({ url: `/common/nearby?city=${encodeURIComponent(city)}` }),
   login: (data) => request({ url: '/user/login', method: 'POST', data }),
@@ -9,3 +9,6 @@ export const api = {
   logout: () => request({ url: '/user/logout', method: 'POST', needAuth: true }),
   orderList: (status) => request({ url: `/order/list${status !== undefined ? `?status=${status}` : ''}`, needAuth: true })
 };
+
+export { api };
+export default api;

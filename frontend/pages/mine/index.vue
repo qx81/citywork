@@ -43,7 +43,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
-import { api } from '../../common/api';
+import api from '../../common/api';
 
 const centerData = ref({
   user: { username: '', city: '', avatar: '' },
@@ -78,9 +78,16 @@ const loadCenter = async () => {
   }
 
   avatarLoading.value = true;
-  const data = await api.center();
+  const centerFn = typeof api?.center === 'function' ? api.center : null;
+  if (!centerFn) {
+    uni.showToast({ title: '个人中心接口不可用', icon: 'none' });
+    avatarLoading.value = false;
+    return;
+  }
+
+  const data = await centerFn();
   centerData.value = data;
-  uni.setStorageSync('userInfo', data.user);
+  uni.setStorageSync('userInfo', data.user || {});
 };
 
 const ensureLogin = () => {
