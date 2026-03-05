@@ -27,16 +27,42 @@ router.post('/login', async (req, res) => {
   if (!isValidPhone(phone) || !password) {
     return fail(res, 400, '参数校验失败');
   }
-  const users = await query('SELECT id,username,phone,avatar FROM `user` WHERE phone=? AND password=?', [phone, password]);
+  const users = await query('SELECT id,username,phone,avatar,city FROM `user` WHERE phone=? AND password=?', [phone, password]);
   if (!users.length) return fail(res, 400, '手机号或密码错误');
   const token = signToken({ userId: users[0].id, phone: users[0].phone });
   return ok(res, { token, user: users[0] }, '登录成功');
 });
 
 router.get('/profile', auth, async (req, res) => {
-  const users = await query('SELECT id,username,phone,avatar,address,bio FROM `user` WHERE id=?', [req.user.userId]);
+  const users = await query('SELECT id,username,phone,avatar,address,bio,city FROM `user` WHERE id=?', [req.user.userId]);
   return users.length ? ok(res, users[0], '获取成功') : fail(res, 404, '用户不存在');
 });
+
+router.get('/center', auth, async (req, res) => {
+  const [users, orderStats, collectionStats, skillStats] = await Promise.all([
+    query('SELECT id,username,avatar,city FROM `user` WHERE id=?', [req.user.userId]),
+    query('SELECT COUNT(1) AS count FROM `order` WHERE user_id=?', [req.user.userId]),
+    query('SELECT COUNT(1) AS count FROM collection WHERE user_id=?', [req.user.userId]),
+    query('SELECT COUNT(1) AS count FROM skill_service WHERE user_id=?', [req.user.userId])
+  ]);
+
+  if (!users.length) return fail(res, 404, '用户不存在');
+
+  return ok(
+    res,
+    {
+      user: users[0],
+      stats: {
+        orderCount: orderStats[0]?.count || 0,
+        collectionCount: collectionStats[0]?.count || 0,
+        skillCount: skillStats[0]?.count || 0
+      }
+    },
+    '获取成功'
+  );
+});
+
+router.post('/logout', auth, async (req, res) => ok(res, null, '退出成功'));
 
 router.put('/profile', auth, async (req, res) => {
   const { username, avatar = '', address = '', bio = '' } = req.body;
