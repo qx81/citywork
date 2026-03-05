@@ -2,12 +2,17 @@
   <view class="page">
     <view class="card">
       <text class="title">统一发布入口</text>
-      <button @click="uni.showActionSheet({itemList:[\"技能\",\"二手\",\"约玩\",\"商家\"]})">选择发布类型</button>
+      <button @click="showTypeSelector">选择发布类型</button>
     </view>
   </view>
 </template>
 
 <script setup>
+const showTypeSelector = () => {
+  uni.showActionSheet({
+    itemList: ['技能', '二手', '约玩', '商家']
+  })
+}
 </script>
 
 <style scoped>
