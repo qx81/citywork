@@ -86,7 +86,9 @@ const handleLocation = () => {
 const handleAbout = () => {
   uni.showModal({
     title: '关于我们',
-    content: '同城生活轻服务平台\n版本：1.0.0\n专注于提供同城技能服务、二手闲置、线下约玩等功能',
+    content: `同城生活轻服务平台
+版本：1.0.0
+专注于提供同城技能服务、二手闲置、线下约玩等功能`,
     showCancel: false
   });
 };
