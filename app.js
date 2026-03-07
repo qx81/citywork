@@ -48,8 +48,10 @@ app.post('/api/upload/avatar', upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.json({ code: 400, msg: '请上传文件', data: null });
   }
-  return res.json({ code: 200, msg: '上传成功', data: { path: req.file.path } });
+  return res.json({ code: 200, msg: '上传成功', data: { path: `/uploads/${req.file.filename}` } });
 });
+
+app.use('/uploads', express.static(uploadDir));
 
 app.use('/api/user', userRoutes);
 app.use('/api/skill', skillRoutes);

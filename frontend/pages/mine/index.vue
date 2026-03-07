@@ -45,7 +45,7 @@ import { computed, onMounted, ref } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
 import * as apiModule from '../../common/api';
 
-const apiService = apiModule?.api || apiModule?.default || apiModule;
+const apiService = apiModule?.default?.api || apiModule?.api || apiModule?.default || apiModule;
 
 const emptyStats = { orderCount: 0, collectionCount: 0, skillCount: 0 };
 const getCachedUser = () => uni.getStorageSync('userInfo') || {};
