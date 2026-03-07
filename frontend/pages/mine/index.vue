@@ -43,7 +43,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
-import api from '../../common/api';
+import { api } from '../../common/api';
 
 const centerData = ref({
   user: { username: '', city: '', avatar: '' },
