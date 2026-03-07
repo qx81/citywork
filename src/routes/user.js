@@ -65,11 +65,11 @@ router.get('/center', auth, async (req, res) => {
 router.post('/logout', auth, async (req, res) => ok(res, null, '退出成功'));
 
 router.put('/profile', auth, async (req, res) => {
-  const { username, avatar = '', address = '', bio = '' } = req.body;
+  const { username, city = '', avatar = '', address = '', bio = '' } = req.body;
   if (!username) {
     return fail(res, 400, '用户名不能为空');
   }
-  await query('UPDATE `user` SET username=?,avatar=?,address=?,bio=? WHERE id=?', [username, avatar, address, bio, req.user.userId]);
+  await query('UPDATE `user` SET username=?,city=?,avatar=?,address=?,bio=? WHERE id=?', [username, city, avatar, address, bio, req.user.userId]);
   return ok(res, null, '更新成功');
 });
 
