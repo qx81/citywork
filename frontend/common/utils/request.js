@@ -20,3 +20,5 @@ export function request({ url, method = 'GET', data = {}, needAuth = false }) {
     });
   });
 }
+
+export { BASE_URL };
