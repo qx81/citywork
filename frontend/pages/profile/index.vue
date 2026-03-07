@@ -41,7 +41,7 @@ import { reactive, ref } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
 import * as apiModule from '../../common/api';
 
-const apiService = apiModule?.api || apiModule?.default || apiModule;
+const apiService = apiModule?.default?.api || apiModule?.api || apiModule?.default || apiModule;
 
 const form = reactive({
   username: '',
@@ -61,6 +61,11 @@ const fillForm = (data = {}) => {
 };
 
 const loadProfile = async () => {
+  if (typeof apiService?.profile !== 'function') {
+    uni.showToast({ title: '资料接口不可用', icon: 'none' });
+    return;
+  }
+
   try {
     const profile = await apiService.profile();
     fillForm(profile);
@@ -93,6 +98,11 @@ const chooseAvatar = () => {
 const submitProfile = async () => {
   if (!form.username.trim()) {
     uni.showToast({ title: '姓名不能为空', icon: 'none' });
+    return;
+  }
+
+  if (typeof apiService?.updateProfile !== 'function') {
+    uni.showToast({ title: '保存接口不可用', icon: 'none' });
     return;
   }
 
