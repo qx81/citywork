@@ -43,7 +43,9 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
-import api from '../../common/api';
+import * as apiModule from '../../common/api';
+
+const apiService = apiModule?.api || apiModule?.default || apiModule;
 
 const centerData = ref({
   user: { username: '', city: '', avatar: '' },
@@ -78,7 +80,7 @@ const loadCenter = async () => {
   }
 
   avatarLoading.value = true;
-  const centerFn = typeof api?.center === 'function' ? api.center : null;
+  const centerFn = typeof apiService?.center === 'function' ? apiService.center : null;
   if (!centerFn) {
     uni.showToast({ title: '个人中心接口不可用', icon: 'none' });
     avatarLoading.value = false;
@@ -119,7 +121,7 @@ const handleLogout = () => {
     success: async ({ confirm }) => {
       if (!confirm) return;
       try {
-        await api.logout();
+        await apiService.logout();
       } catch (e) {
         // 接口异常时仍允许前端退出
       }
