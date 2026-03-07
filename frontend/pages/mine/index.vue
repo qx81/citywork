@@ -43,12 +43,15 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
-import api from '../../common/api';
+import * as apiModule from '../../common/api';
 
-const centerData = ref({
-  user: { username: '', city: '', avatar: '' },
-  stats: { orderCount: 0, collectionCount: 0, skillCount: 0 }
-});
+const apiService = apiModule?.api || apiModule?.default || apiModule;
+
+const emptyStats = { orderCount: 0, collectionCount: 0, skillCount: 0 };
+const getCachedUser = () => uni.getStorageSync('userInfo') || {};
+const getDefaultCenterData = () => ({ user: { username: '', city: '', avatar: '', ...getCachedUser() }, stats: { ...emptyStats } });
+
+const centerData = ref(getDefaultCenterData());
 const avatarLoading = ref(true);
 const showEntries = ref(false);
 
@@ -72,22 +75,29 @@ const entries = [
 const loadCenter = async () => {
   const token = uni.getStorageSync('token');
   if (!token) {
-    centerData.value = { user: { username: '', city: '', avatar: '' }, stats: { orderCount: 0, collectionCount: 0, skillCount: 0 } };
+    centerData.value = getDefaultCenterData();
     avatarLoading.value = false;
     return;
   }
 
   avatarLoading.value = true;
-  const centerFn = typeof api?.center === 'function' ? api.center : null;
+  const centerFn = typeof apiService?.center === 'function' ? apiService.center : null;
   if (!centerFn) {
     uni.showToast({ title: '个人中心接口不可用', icon: 'none' });
     avatarLoading.value = false;
     return;
   }
 
-  const data = await centerFn();
-  centerData.value = data;
-  uni.setStorageSync('userInfo', data.user || {});
+  try {
+    const data = await centerFn();
+    centerData.value = {
+      user: { ...getDefaultCenterData().user, ...(data?.user || {}) },
+      stats: { ...emptyStats, ...(data?.stats || {}) }
+    };
+    uni.setStorageSync('userInfo', centerData.value.user || {});
+  } catch (e) {
+    centerData.value = getDefaultCenterData();
+  }
 };
 
 const ensureLogin = () => {
@@ -119,7 +129,7 @@ const handleLogout = () => {
     success: async ({ confirm }) => {
       if (!confirm) return;
       try {
-        await api.logout();
+        await apiService.logout();
       } catch (e) {
         // 接口异常时仍允许前端退出
       }
