@@ -83,7 +83,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { api } from '../../common/api';
 
-const cityText = ref('深圳市 · 南山区');
+const cityText = ref('未填写地区');
 const activeCategory = ref('推荐');
 const feedList = ref([]);
 const nearbyServices = ref([]);
@@ -146,9 +146,34 @@ const goDetail = (item) => {
   uni.navigateTo({ url: map[item.type] || '/pages/search/index' });
 };
 
+const getUserRegion = async () => {
+  const cached = uni.getStorageSync('userInfo') || {};
+  let city = String(cached.city || '').trim();
+  const address = String(cached.address || '').trim();
+
+  if (!city && uni.getStorageSync('token')) {
+    try {
+      const profile = await api.profile();
+      city = String(profile.city || '').trim();
+      if (profile && Object.keys(profile).length) {
+        uni.setStorageSync('userInfo', { ...cached, ...profile });
+      }
+    } catch (e) {
+      // 未登录或资料获取失败时使用缓存兜底
+    }
+  }
+
+  if (!city) return '未填写地区';
+  if (address && address.includes(city)) return address;
+  return city;
+};
+
 onMounted(async () => {
+  const region = await getUserRegion();
+  cityText.value = region;
+
   try {
-    const data = await api.homeFeed({ city: '深圳市', district: '南山区' });
+    const data = await api.homeFeed({ city: region === '未填写地区' ? '' : region, district: '' });
     feedList.value = data.feed || [];
     nearbyServices.value = data.nearbyServices || [];
   } catch (e) {

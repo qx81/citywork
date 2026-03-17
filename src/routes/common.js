@@ -16,7 +16,7 @@ router.get('/search', async (req, res) => {
 });
 
 router.get('/home', async (req, res) => {
-  const { city = '杭州', district = '' } = req.query;
+  const { city = '', district = '' } = req.query;
   const areaKeyword = district ? `${city}${district}` : city;
   const areaLike = `%${areaKeyword}%`;
 
