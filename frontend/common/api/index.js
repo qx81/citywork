@@ -2,6 +2,10 @@ import { BASE_URL, request } from '../utils/request';
 
 const api = {
   homeSearch: (keyword) => request({ url: `/common/search?keyword=${encodeURIComponent(keyword)}` }),
+  homeFeed: (params = {}) => {
+    const { city = '杭州', district = '' } = params;
+    return request({ url: `/common/home?city=${encodeURIComponent(city)}&district=${encodeURIComponent(district)}` });
+  },
   nearby: (city) => request({ url: `/common/nearby?city=${encodeURIComponent(city)}` }),
   login: (data) => request({ url: '/user/login', method: 'POST', data }),
   profile: () => request({ url: '/user/profile', needAuth: true }),
