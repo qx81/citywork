@@ -7,6 +7,7 @@ const api = {
     return request({ url: `/common/home?city=${encodeURIComponent(city)}&district=${encodeURIComponent(district)}` });
   },
   nearby: (city) => request({ url: `/common/nearby?city=${encodeURIComponent(city)}` }),
+  skillList: (sort = 'recommend') => request({ url: `/skill/list?sort=${encodeURIComponent(sort)}` }),
   login: (data) => request({ url: '/user/login', method: 'POST', data }),
   profile: () => request({ url: '/user/profile', needAuth: true }),
   updateProfile: (data) => request({ url: '/user/profile', method: 'PUT', data, needAuth: true }),
