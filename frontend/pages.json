@@ -13,9 +13,9 @@
     { "path": "pages/message/index", "style": { "navigationBarTitleText": "消息中心" } },
 
     { "path": "pages/skill/index", "style": { "navigationStyle": "custom" } },
-    { "path": "pages/secondHand/index", "style": { "navigationBarTitleText": "二手闲置" } },
-    { "path": "pages/play/index", "style": { "navigationBarTitleText": "线下约玩" } },
-    { "path": "pages/business/index", "style": { "navigationBarTitleText": "商家推荐" } },
+    { "path": "pages/secondHand/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/play/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/business/index", "style": { "navigationStyle": "custom" } },
 
     { "path": "pages/order/orderList", "style": { "navigationBarTitleText": "订单列表" } },
     { "path": "pages/order/orderDetail", "style": { "navigationBarTitleText": "订单详情" } },
