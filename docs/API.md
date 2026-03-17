@@ -36,5 +36,6 @@
 | /api/collection/remove | DELETE | 是 | 取消收藏 |
 | /api/collection/list | GET | 是 | 收藏列表 |
 | /api/common/search | GET | 否 | 全局搜索 |
+| /api/common/home | GET | 否 | 首页聚合数据（feed + 附近服务） |
 | /api/common/nearby | GET | 否 | 同城附近推荐 |
 | /api/common/message | GET | 否 | 模拟消息中心 |
