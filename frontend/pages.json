@@ -12,7 +12,7 @@
     { "path": "pages/collection/index", "style": { "navigationBarTitleText": "收藏" } },
     { "path": "pages/message/index", "style": { "navigationBarTitleText": "消息中心" } },
 
-    { "path": "pages/skill/index", "style": { "navigationBarTitleText": "技能服务" } },
+    { "path": "pages/skill/index", "style": { "navigationStyle": "custom" } },
     { "path": "pages/secondHand/index", "style": { "navigationBarTitleText": "二手闲置" } },
     { "path": "pages/play/index", "style": { "navigationBarTitleText": "线下约玩" } },
     { "path": "pages/business/index", "style": { "navigationBarTitleText": "商家推荐" } },
