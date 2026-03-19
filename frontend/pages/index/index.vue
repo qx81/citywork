@@ -143,6 +143,10 @@ const goDetail = (item) => {
     play: '/pages/play/index',
     shop: '/pages/business/index'
   };
+  if (item.type === 'skill' && item.sourceId) {
+    uni.navigateTo({ url: `/pages/skill/detail?id=${item.sourceId}` });
+    return;
+  }
   uni.navigateTo({ url: map[item.type] || '/pages/search/index' });
 };
 
