@@ -18,7 +18,7 @@ router.get('/list', async (req, res) => {
 });
 
 router.get('/detail/:id', async (req, res) => {
-  const list = await query('SELECT s.*,u.username,u.avatar,u.phone FROM skill_service s JOIN user u ON s.user_id=u.id WHERE s.id=?', [req.params.id]);
+  const list = await query('SELECT s.*,u.username,u.avatar,u.phone,u.city,u.bio FROM skill_service s JOIN user u ON s.user_id=u.id WHERE s.id=?', [req.params.id]);
   return ok(res, list[0] || null, '获取成功');
 });
 

@@ -21,7 +21,7 @@
     </view>
 
     <view v-else-if="serviceList.length" class="list-wrap">
-      <view v-for="service in serviceList" :key="service.id" class="service-card">
+      <view v-for="service in serviceList" :key="service.id" class="service-card" @click="goDetail(service.id)">
         <view class="card-top">
           <text class="category-pill">{{ service.category || '技能服务' }}</text>
           <text class="time-text">{{ formatTime(service.created_at) }}</text>
@@ -102,6 +102,7 @@ const loadSkillServices = async () => {
 };
 
 const reload = () => loadSkillServices();
+const goDetail = (id) => uni.navigateTo({ url: `/pages/skill/detail?id=${id}` });
 
 onMounted(() => {
   loadSkillServices();

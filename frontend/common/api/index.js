@@ -8,6 +8,7 @@ const api = {
   },
   nearby: (city) => request({ url: `/common/nearby?city=${encodeURIComponent(city)}` }),
   skillList: (sort = 'recommend') => request({ url: `/skill/list?sort=${encodeURIComponent(sort)}` }),
+  skillDetail: (id) => request({ url: `/skill/detail/${id}` }),
   secondHandList: () => request({ url: '/secondHand/list' }),
   playList: (sort = 'time') => request({ url: `/play/list?sort=${encodeURIComponent(sort)}` }),
   businessList: () => request({ url: '/business/list' }),
