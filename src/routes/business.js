@@ -15,6 +15,12 @@ router.post('/like/:id', auth, async (req, res) => {
   return ok(res, null, '点赞成功');
 });
 
+
+router.get('/detail/:id', async (req, res) => {
+  const rows = await query('SELECT * FROM local_business WHERE id=? LIMIT 1', [req.params.id]);
+  return ok(res, rows[0] || null, '获取成功');
+});
+
 router.get('/list', async (req, res) => {
   const list = await query('SELECT * FROM local_business ORDER BY score DESC, is_recommend DESC');
   return ok(res, list, '获取成功');

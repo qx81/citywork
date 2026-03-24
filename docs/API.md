@@ -17,8 +17,11 @@
 | /api/skill/create | POST | 是 | title/description/price/price_unit/area/available_time/images/category |
 | /api/skill/list | GET | 否 | sort(recommend/latest/price) |
 | /api/secondHand/create | POST | 是 | title/description/original_price/price/condition_level/pickup_address/contact_phone/images |
+| /api/secondHand/detail/:id | GET | 否 | id路径参数 |
 | /api/play/create | POST | 是 | title/play_type/play_time/location/budget/max_people/description |
+| /api/play/detail/:id | GET | 否 | id路径参数 |
 | /api/business/create | POST | 是 | name/address/score/reason/avg_cost/images |
+| /api/business/detail/:id | GET | 否 | id路径参数 |
 
 ## 订单模块
 | 接口 | 方法 | 权限 | 参数 | 规则 |

@@ -17,6 +17,12 @@ router.post('/join/:id', auth, async (req, res) => {
   return ok(res, null, '报名成功');
 });
 
+
+router.get('/detail/:id', async (req, res) => {
+  const rows = await query('SELECT * FROM play_together WHERE id=? LIMIT 1', [req.params.id]);
+  return ok(res, rows[0] || null, '获取成功');
+});
+
 router.get('/list', async (req, res) => {
   const { sort = 'time' } = req.query;
   const orderBy = sort === 'distance' ? 'distance_km ASC' : 'play_time ASC';

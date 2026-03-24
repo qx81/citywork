@@ -19,7 +19,7 @@
     <view v-if="loading" class="loading-wrap"><text class="loading-text">正在加载闲置好物...</text></view>
 
     <view v-else-if="list.length" class="list-wrap">
-      <view v-for="item in list" :key="item.id" class="card">
+      <view v-for="item in list" :key="item.id" class="card" @click="goDetail(item.id)">
         <view class="head-row">
           <text class="tag">{{ item.condition_level || '成色未知' }}</text>
           <text class="time">{{ formatTime(item.created_at) }}</text>
@@ -62,6 +62,7 @@ const list = ref([]);
 const goBack = () => (getCurrentPages().length > 1 ? uni.navigateBack() : uni.switchTab({ url: '/pages/index/index' }));
 const goHome = () => uni.switchTab({ url: '/pages/index/index' });
 const goSearch = () => uni.navigateTo({ url: '/pages/search/index' });
+const goDetail = (id) => uni.navigateTo({ url: '/pages/secondHand/detail?id=' + id });
 
 const formatTime = (time) => {
   if (!time) return '刚刚发布';

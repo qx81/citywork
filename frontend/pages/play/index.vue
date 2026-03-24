@@ -4,7 +4,7 @@
     <view class="search-section"><view class="search-box" @click="goSearch"><text class="search-icon">🔍</text><text class="search-placeholder">搜索羽毛球、桌游、徒步、剧本杀...</text></view></view>
     <view v-if="loading" class="loading-wrap"><text class="loading-text">正在加载活动...</text></view>
     <view v-else-if="list.length" class="list-wrap">
-      <view v-for="item in list" :key="item.id" class="card">
+      <view v-for="item in list" :key="item.id" class="card" @click="goDetail(item.id)">
         <view class="head-row"><text class="tag">{{ item.play_type || '同城约玩' }}</text><text class="time">{{ formatTime(item.play_time) }}</text></view>
         <text class="title">{{ item.title || '未命名活动' }}</text>
         <text class="desc">{{ item.description || '发起人暂无补充说明' }}</text>
@@ -33,6 +33,7 @@ const list = ref([]);
 const goBack = () => (getCurrentPages().length > 1 ? uni.navigateBack() : uni.switchTab({ url: '/pages/index/index' }));
 const goHome = () => uni.switchTab({ url: '/pages/index/index' });
 const goSearch = () => uni.navigateTo({ url: '/pages/search/index' });
+const goDetail = (id) => uni.navigateTo({ url: '/pages/play/detail?id=' + id });
 
 const formatTime = (time) => {
   if (!time) return '时间待定';

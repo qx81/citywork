@@ -5,7 +5,7 @@
 
     <view v-if="loading" class="loading-wrap"><text class="loading-text">正在加载优质商家...</text></view>
     <view v-else-if="list.length" class="list-wrap">
-      <view v-for="item in list" :key="item.id" class="card">
+      <view v-for="item in list" :key="item.id" class="card" @click="goDetail(item.id)">
         <view class="head-row"><text class="tag">精选商家</text><text class="score">⭐ {{ item.score || '暂无评分' }}</text></view>
         <text class="title">{{ item.name || '未命名商家' }}</text>
         <text class="desc">{{ item.recommend_reason || '暂无推荐理由' }}</text>
@@ -35,6 +35,7 @@ const list = ref([]);
 const goBack = () => (getCurrentPages().length > 1 ? uni.navigateBack() : uni.switchTab({ url: '/pages/index/index' }));
 const goHome = () => uni.switchTab({ url: '/pages/index/index' });
 const goSearch = () => uni.navigateTo({ url: '/pages/search/index' });
+const goDetail = (id) => uni.navigateTo({ url: '/pages/business/detail?id=' + id });
 
 const loadData = async () => {
   loading.value = true;
