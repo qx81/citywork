@@ -25,9 +25,11 @@
 |---|---|---|---|---|
 | /api/order/create | POST | 是 | content_id/content_type/amount/service_time/remark | 初始状态待支付 |
 | /api/order/pay/:id | POST | 是 | - | 仅待支付可支付 |
+| /api/order/process/:id | POST | 是 | - | 仅已支付可变为待完成 |
 | /api/order/cancel/:id | POST | 是 | - | 待支付/已支付/待完成可取消 |
 | /api/order/complete/:id | POST | 是 | - | 仅待完成可完成 |
 | /api/order/list | GET | 是 | status可选 | 按状态筛选 |
+| /api/order/detail/:id | GET | 是 | - | 获取单个订单详情 |
 
 ## 收藏、搜索、附近、消息
 | 接口 | 方法 | 权限 | 说明 |
