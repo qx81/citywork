@@ -15,8 +15,11 @@
     { "path": "pages/skill/index", "style": { "navigationStyle": "custom" } },
     { "path": "pages/skill/detail", "style": { "navigationStyle": "custom" } },
     { "path": "pages/secondHand/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/secondHand/detail", "style": { "navigationStyle": "custom" } },
     { "path": "pages/play/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/play/detail", "style": { "navigationStyle": "custom" } },
     { "path": "pages/business/index", "style": { "navigationStyle": "custom" } },
+    { "path": "pages/business/detail", "style": { "navigationStyle": "custom" } },
 
     { "path": "pages/order/orderList", "style": { "navigationBarTitleText": "订单列表" } },
     { "path": "pages/order/orderDetail", "style": { "navigationBarTitleText": "订单详情" } },

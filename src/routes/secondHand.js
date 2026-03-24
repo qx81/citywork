@@ -10,6 +10,12 @@ router.post('/create', auth, async (req, res) => {
   return ok(res, { id: result.insertId }, '发布成功');
 });
 
+
+router.get('/detail/:id', async (req, res) => {
+  const rows = await query('SELECT sh.*,u.username,u.avatar FROM second_hand sh JOIN user u ON sh.user_id=u.id WHERE sh.id=? LIMIT 1', [req.params.id]);
+  return ok(res, rows[0] || null, '获取成功');
+});
+
 router.get('/list', async (req, res) => {
   const list = await query('SELECT sh.*,u.username,u.avatar FROM second_hand sh JOIN user u ON sh.user_id=u.id WHERE sh.status=1 ORDER BY sh.is_recommend DESC, sh.created_at DESC');
   return ok(res, list, '获取成功');
