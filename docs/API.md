@@ -31,8 +31,9 @@
 | /api/order/process/:id | POST | 是 | - | 仅已支付可变为待完成 |
 | /api/order/cancel/:id | POST | 是 | - | 待支付/已支付/待完成可取消 |
 | /api/order/complete/:id | POST | 是 | - | 仅待完成可完成 |
-| /api/order/list | GET | 是 | status可选 | 按状态筛选 |
+| /api/order/list | GET | 是 | status/page/pageSize可选 | 按状态筛选并分页，返回列表附带标题/封面/摘要等展示字段 |
 | /api/order/detail/:id | GET | 是 | - | 获取单个订单详情 |
+| /api/order/delete/:id | POST | 是 | - | 仅已完成/已取消订单可删除 |
 
 ## 收藏、搜索、附近、消息
 | 接口 | 方法 | 权限 | 说明 |
