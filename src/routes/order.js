@@ -48,10 +48,72 @@ router.post('/complete/:id', auth, async (req, res) => {
 });
 
 router.get('/list', auth, async (req, res) => {
-  const { status } = req.query;
-  const sql = status === undefined ? 'SELECT * FROM `order` WHERE user_id=? ORDER BY created_at DESC' : 'SELECT * FROM `order` WHERE user_id=? AND status=? ORDER BY created_at DESC';
-  const list = await query(sql, status === undefined ? [req.user.userId] : [req.user.userId, status]);
-  return ok(res, list, '获取成功');
+  const { status, page = 1, pageSize = 10 } = req.query;
+  const pageNum = Math.max(1, Number(page) || 1);
+  const sizeNum = Math.min(50, Math.max(1, Number(pageSize) || 10));
+  const offset = (pageNum - 1) * sizeNum;
+
+  const whereSql = status === undefined ? 'o.user_id=?' : 'o.user_id=? AND o.status=?';
+  const params = status === undefined ? [req.user.userId] : [req.user.userId, Number(status)];
+
+  const countRows = await query(`SELECT COUNT(1) AS total FROM \`order\` o WHERE ${whereSql}`, params);
+  const total = countRows[0]?.total || 0;
+
+  const list = await query(
+    `SELECT o.id,o.order_no,o.user_id,o.content_id,o.content_type,o.amount,o.status,o.service_time,o.remark,o.created_at,o.updated_at,
+            COALESCE(ss.title, sh.title, pt.title) AS title,
+            CASE
+              WHEN o.content_type='skill' THEN CONCAT(COALESCE(ss.description,''), ' | ', COALESCE(ss.service_time,''))
+              WHEN o.content_type='second_hand' THEN CONCAT(COALESCE(sh.condition_level,''), ' | 自提')
+              WHEN o.content_type='play' THEN CONCAT(COALESCE(pt.play_type,''), ' | ', DATE_FORMAT(pt.play_time,'%m-%d %H:%i'))
+              ELSE ''
+            END AS summary,
+            CASE
+              WHEN o.content_type='skill' THEN DATE_FORMAT(o.service_time,'%Y-%m-%d %H:%i')
+              WHEN o.content_type='second_hand' THEN COALESCE(sh.pickup_address,'')
+              WHEN o.content_type='play' THEN COALESCE(pt.location,'')
+              ELSE ''
+            END AS meta,
+            CASE
+              WHEN o.content_type='skill' THEN ss.service_area
+              WHEN o.content_type='second_hand' THEN sh.pickup_address
+              WHEN o.content_type='play' THEN pt.location
+              ELSE ''
+            END AS location,
+            CASE
+              WHEN o.content_type='skill' THEN ss.images
+              WHEN o.content_type='second_hand' THEN sh.images
+              WHEN o.content_type='play' THEN ''
+              ELSE ''
+            END AS images
+     FROM \`order\` o
+     LEFT JOIN skill_service ss ON o.content_type='skill' AND o.content_id=ss.id
+     LEFT JOIN second_hand sh ON o.content_type='second_hand' AND o.content_id=sh.id
+     LEFT JOIN play_together pt ON o.content_type='play' AND o.content_id=pt.id
+     WHERE ${whereSql}
+     ORDER BY o.created_at DESC
+     LIMIT ${sizeNum} OFFSET ${offset}`,
+    params
+  );
+
+  return ok(res, {
+    list,
+    page: pageNum,
+    pageSize: sizeNum,
+    total,
+    hasMore: offset + list.length < total
+  }, '获取成功');
+});
+
+
+router.post('/delete/:id', auth, async (req, res) => {
+  const rows = await query('SELECT status FROM `order` WHERE id=? AND user_id=?', [req.params.id, req.user.userId]);
+  if (!rows.length) return fail(res, 404, '订单不存在');
+  if (![ORDER_STATUS.COMPLETED, ORDER_STATUS.CANCELED].includes(rows[0].status)) {
+    return fail(res, 400, '仅已完成或已取消订单可删除');
+  }
+  await query('DELETE FROM `order` WHERE id=? AND user_id=?', [req.params.id, req.user.userId]);
+  return ok(res, null, '删除成功');
 });
 
 router.get('/detail/:id', auth, async (req, res) => {
