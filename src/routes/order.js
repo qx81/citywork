@@ -92,8 +92,8 @@ router.get('/list', auth, async (req, res) => {
      LEFT JOIN play_together pt ON o.content_type='play' AND o.content_id=pt.id
      WHERE ${whereSql}
      ORDER BY o.created_at DESC
-     LIMIT ? OFFSET ?`,
-    [...params, sizeNum, offset]
+     LIMIT ${sizeNum} OFFSET ${offset}`,
+    params
   );
 
   return ok(res, {
